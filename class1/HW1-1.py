@@ -2,7 +2,7 @@ import tkinter as tk
 
 # create window and widgets
 root = tk.Tk()
-
+#create var
 status_var = tk.StringVar()
 status_var.set("初始化。")
 

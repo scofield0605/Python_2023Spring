@@ -24,16 +24,28 @@ root.iconphoto(True,tk_img)
 # label5.pack()
 # label6=Label(root, text='flat', relief='sunken')
 # label6.pack()
+
+#create var
+status_var = StringVar()
+status_var.set("初始化。")
+
+status_label = Label(root, textvariable=status_var, bd=1, relief=SUNKEN, anchor=W)
+status_label.pack(side=BOTTOM, fill=X)
+
 def start():
-    pass
+    status_var.set("start")
+
 def stop():
-    pass
-# button1=Button(root, text='Start')
-# button1.pack()
-# button2=Button(root,text='Stop')
-# button2.pack()
-# statusBar= Label(root,text='processing', fg='black', bg='white' ,anchor=W,relief='sunken',bd=2)
-# statusBar.pack(side='bottom',fill='x')
+    status_var.set("stop")
+
+
+#create buttom
+button1=Button(root, text='Start',command=start)
+button1.pack()
+button2=Button(root,text='Stop',command=stop)
+button2.pack()
+statusBar= Label(root,text='processing', fg='black', bg='white' ,anchor=W,relief='sunken',bd=2)
+statusBar.pack(side='bottom',fill='x')
 table=ttk.Treeview(root,columns=['product name', 'Unit Price','Quantity'])
 table.heading('#0', text='Product Name')
 table.heading('#1', text='Unit Price')

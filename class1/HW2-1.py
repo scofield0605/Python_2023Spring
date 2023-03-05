@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk
+import tkinter.ttk as ttk
 root= Tk()
 root.title('KubeTech Shop')
 root.geometry('880x650')
@@ -349,9 +350,38 @@ number4.grid(row=4,column=7)
 addbutton4.grid(row=4,column=7,sticky=E)
 
 #row=5
+Toplevel
+def shoppinglist():
+
+
+#create buttom
+    new4=Toplevel(root)
+    new4.geometry('880x650')
+    table=ttk.Treeview(new4,columns=['product name', 'Unit Price','Quantity'])
+    table.heading('#0', text='Product Name')
+    table.heading('#1', text='Unit Price')
+    table.heading('#2', text='Quantily')
+    table.heading('#3', text='Subtotal') 
+    table.column('#0',width=250, anchor=CENTER)
+    table.column('#1', anchor=CENTER)
+    table.column('#2', anchor=CENTER)
+    table.column('#3', anchor=CENTER)
+    table.tag_configure('totalcolor', background='#E7E2E2')
+    subtotal1=int(productprice1['text'].split('.')[1].replace(',','').strip())*int(number1['text'])
+    table.insert('',index='end',text=productname1['text'], values=(productprice1['text'],number1['text'],subtotal1))
+    subtotal2=int(productprice2['text'].split('.')[1].replace(',','').strip())*int(number1['text'])
+    table.insert('',index='end',text=productname2['text'], values=(productprice2['text'],number2['text'],subtotal2))
+    subtotal3=int(productprice3['text'].split('.')[1].replace(',','').strip())*int(number1['text'])
+    table.insert('',index='end',text=productname3['text'], values=(productprice3['text'],number3['text'],subtotal3))
+    subtotal4=int(productprice4['text'].split('.')[1].replace(',','').strip())*int(number1['text'])
+    table.insert('',index='end',text=productname4['text'], values=(productprice4['text'],number4['text'],subtotal4))
+    total=subtotal1+subtotal2+subtotal3+subtotal4
+    table.insert('',index='end',text='Total', values=['','',total],tags=('totalcolor'))
+    table.pack()
+
 
 root.rowconfigure(5,weight=2)
-detailbtn=Button(root,text='詳細清單',font=('Inter',18))
+detailbtn=Button(root,text='詳細清單',font=('Inter',18), command=shoppinglist)
 detailbtn.grid(row=5,column=0,sticky=W+S,padx=5,pady=1)
 chartImage=Image.open('/Users/scofield/Documents/Python_2022Autumn/Python_2022Autumn/class10.py/image/Shopping Cart.png')
 chartimage=chartImage.resize((32,32))
@@ -364,6 +394,14 @@ totallabel=Label(root, textvariable=totalval,font=('Inter',18),fg='#000000')
 totallabel.grid(row=5,column=6,columnspan=2,sticky=W+S)
 checkout=Button(root,text='結帳',font=('Inter',18))
 checkout.grid(row=5,column=7,columnspan=2,sticky=E+S)
+
+
+#create var
+
+
+
+
+
 root.mainloop()
 
 

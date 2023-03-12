@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk
 import tkinter.ttk as ttk
+from tkscrolledframe import ScrolledFrame
 root= Tk()
 root.title('午餐系統')
 root.geometry('300x100')
@@ -41,6 +42,10 @@ checkbtn5.grid(row=5,column=1, sticky=W)
 # 放入第六個單選按鈕
 checkbtn6 = Checkbutton(root, text='伯爵奶茶',variable=checkbtnVal6, onvalue="伯爵奶茶", offvalue="", fg='black', command=show)
 checkbtn6.grid(row=5,column=2, sticky=W)
+
+sframe1=ScrolledFrame(root,width=300,height=300,bg='pink')
+
+
 
 # 建立 Label
 statusBar2 = Label(root, text="", fg="black", bg="white", anchor=W, relief="sunken",bd=2)

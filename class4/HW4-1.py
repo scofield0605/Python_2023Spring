@@ -8,9 +8,23 @@ root.geometry('880x650')
 
 value=StringVar()
 
+#建立下getValue function
+def getValue(a):
+#取得RGB
+    r = int(R.get ())
+    g = int(G.get ())
+    b = int(B.get ())
+# 數值轉換為16進位
+    hex ="#{:02x}{:02x}{:02x}".format(r, g, b)
+#分別設定 Label 文字內容
+    Rlabel["text"]="R:"+str(R.get ())
+    Glabel["text"]="G:"+str(G.get ())
+    Blabel["text"]="B: "+str(B.get ())
+#分別設定 statusBar1 背景
+    color["bg"]=hex 
+    color["text"]=hex
 
-def Rnumber(e):
-    value.set(str(R.get()))
+
 
 Rlabel=Label(root,text='R:')
 Rlabel.grid(row=0,column=0,sticky=W)
@@ -20,7 +34,7 @@ number.grid(row=0,column=1,sticky=W)
 
 
 
-R=Scale(root, from_=0, to=255,orient="horizontal",length=300,showvalue=True,command=Rnumber)
+R=Scale(root, from_=0, to=255,orient="horizontal",length=300,showvalue=True,command=getValue)
 R.grid(row=1,column=0,columnspan=3)
 
 
@@ -29,15 +43,15 @@ value2=StringVar()
 def Gnumber(e):
     value2.set(str(G.get()))
 
-Rlabel=Label(root,text='G:')
-Rlabel.grid(row=2,column=0,sticky=W)
+Glabel=Label(root,text='G:')
+Glabel.grid(row=2,column=0,sticky=W)
 
 number2= Label(root,textvariable=value2, fg='black',anchor=W,bd=2)
 number2.grid(row=2,column=1,sticky=W)
 
 
 
-G=Scale(root, from_=0, to=255,orient="horizontal",length=300,showvalue=True,command=Gnumber)
+G=Scale(root, from_=0, to=255,orient="horizontal",length=300,showvalue=True,command=getValue)
 G.grid(row=3,column=0,columnspan=3)
 
 
@@ -55,11 +69,12 @@ number3.grid(row=5,column=1,sticky=W)
 
 
 
-B=Scale(root, from_=0, to=255,orient="horizontal",length=300,showvalue=True,command=Bnumber)
+B=Scale(root, from_=0, to=255,orient="horizontal",length=300,showvalue=True,command=getValue)
 B.grid(row=6,column=0,columnspan=3)
 
-color=Label(root,background='black',bd=2)
-color.grid(row=7,column=0,columnspan=3)
+color=Label(root,text='',fg='white',bg='white',bd=2,font=(20),relief="sunken")
+color.grid(row=7,column=0,columnspan=3,sticky=W+E+S)
+
 
 
 

@@ -1,6 +1,6 @@
-class lession:
+class lesson:
 #建構式
-    def _init_(self, time, name):
+    def __init__(self, time, name):
         self.time = time
         self.name=name
     @classmethod
@@ -12,7 +12,7 @@ class lession:
         return cls ("Thruday", "Peter") 
     def introduce (self):
         print("the lession is taught by {} on {}.".format (self.name, self.time))
-emma = lession.Math ()
-ben = lession.english()
-emma. introduce ()
-ben.introduce ()
+emma = lesson.Math ()
+ben = lesson.english()
+emma.introduce()
+ben.introduce()

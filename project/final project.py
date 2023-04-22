@@ -356,7 +356,7 @@ minusbutton4.grid(row=4,column=7,sticky=W)
 number4.grid(row=4,column=7)
 addbutton4.grid(row=4,column=7,sticky=E)
 
-#row=5
+#row=5 
 
 root.rowconfigure(5,weight=2)
 detailbtn=Button(root,text='詳細清單',font=('Inter',18))
@@ -371,7 +371,7 @@ totalval.set('共消費：0元')
 totallabel=Label(root, textvariable=totalval,font=('Inter',18),fg='#000000')
 totallabel.grid(row=5,column=6,columnspan=2,sticky=W+S)
 checkout=Button(root,text='結帳',font=('Inter',18))
-checkout.grid(row=5,column=7,columnspan=2,sticky=E+S)
+checkout.grid(row=5,column=7,columnspan=2,sticky=E+S) 
 root.mainloop()
 
 

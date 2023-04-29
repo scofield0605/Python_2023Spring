@@ -1,4 +1,5 @@
 from tkinter import *
+import tkinter.ttk as ttk
 from tkinter import messagebox
 from PIL import Image, ImageTk
 root= Tk()
@@ -63,6 +64,38 @@ sofa4Image=ImageTk.PhotoImage(sofa4Image)
 sofa4label=Label(root, image=sofa4Image,width=202,height=200)
 sofa4label.grid(row=2,column=6,columnspan=2,sticky=W, padx=5)
 
+
+#詳細清單
+def newwindow2():
+
+    detailWindow = Toplevel(root)
+    detailWindow.geometry('850x250')
+    table = ttk.Treeview(detailWindow, columns=['Unit Price', 'Quantity', 'Subtotal'])
+    table.heading('#0', text='Product Name')
+    table.heading('#1', text='Unit Price')
+    table.heading('#2', text='Quantity')
+    table.heading('#3', text='Subtotal')
+    table.column('#0', width=250, anchor=CENTER)
+    table.column('#1', anchor=CENTER)
+    table.column('#2', anchor=CENTER)
+    table.column('#3', anchor=CENTER)
+    # 建立内容,從total行是用淺藍色底
+    table.tag_configure('totalcolor', background='#E7E2E2')
+    subtotal1 = int(number1['text']) * int(productprice1['text'].split('.')[1].replace(',',''))
+    table.insert('',index='end',text=productname1['text'],values=[productprice1['text'],number1['text'], subtotal1])
+    subtotal2 = int(number2['text']) * int(productprice2['text'].split('.')[1].replace(',',''))
+    table.insert('',index='end',text=productname2['text'],values=[productprice2['text'],number2['text'], subtotal2])
+    subtotal3 = int(number3['text']) * int(productprice3['text'].split('.')[1].replace(',',''))
+    table.insert('',index='end',text=productname3['text'],values=[productprice3['text'],number3['text'], subtotal3])
+    subtotal4 = int(number4['text']) * int(productprice4['text'].split('.')[1].replace(',',''))
+    table.insert('',index='end',text=productname4['text'],values=[productprice4['text'],number4['text'], subtotal4])
+    total = subtotal1+subtotal2+subtotal3+subtotal4
+    table.insert('',index='end',text='Total',values=['','', total], tags=('totalcolor'))
+    table.pack()
+    
+    detailWindow.mainloop()
+
+#筆電
 def createNewWindow():
     new=Toplevel(root)
     new.geometry('880x650')
@@ -75,12 +108,11 @@ def createNewWindow():
     bed1.grid(row=0,column=2,sticky=W)
     kit1.grid(row=0,column=3,sticky=E+W)
     member1.grid(row=0,column=7,sticky=E+W, padx=5)
-    bannerImage1=Image.open('/Users/scofield/Documents/Python_2022Autumn/Python_2022Autumn/class10.py/image/Orange Modern Special Offer Big Sale Facebook Ad.png')
-    bannerImage1=bannerImage1.resize((852,298))
-    bannerImage1=ImageTk.PhotoImage(bannerImage1)
-    bannerlabel1=Label(new, image=bannerImage1,width=852,height=298)
-    bannerlabel1.grid(row=1,column=0,columnspan=8,padx=5)
 
+    adviertise=Image.open('/Users/scofield/Documents/Python_2023Spring/project/depositphotos_89763874-stock-illustration-click-here-vertical-advertising-banner.jpg')
+    adviertise=ImageTk.PhotoImage(adviertise)
+    adviertiselabel=Label(new, image=adviertise,width=202,height=200)
+    adviertiselabel.grid(row=0,column=0,columnspan=2,sticky=W, padx=5)
     sofa1Image1=Image.open('/Users/scofield/Documents/Python_2022Autumn/Python_2022Autumn/class10.py/image/chromebook.jpg')
     sofa1Image1=sofa1Image1.resize((202,200))
     sofa1Image1=ImageTk.PhotoImage(sofa1Image1)
@@ -91,7 +123,7 @@ def createNewWindow():
     sofa2Image1=sofa2Image1.resize((202,200))
     sofa2Image1=ImageTk.PhotoImage(sofa2Image1)
     sofa2label1=Label(new, image=sofa2Image1,width=202,height=200)
-    sofa2label1.grid(row=2,column=2,columnspan=2,sticky=W, padx=5)
+    sofa2label1.grid(row=4,column=2,columnspan=2,sticky=W, padx=5)
 
     sofa3Image1=Image.open('/Users/scofield/Documents/Python_2022Autumn/Python_2022Autumn/class10.py/image/Screenshot 2022-12-17 at 14.39.23.png')
     sofa3Image1=sofa3Image1.resize((202,200))
@@ -103,25 +135,25 @@ def createNewWindow():
     sofa4Image1=sofa4Image1.resize((202,200))
     sofa4Image1=ImageTk.PhotoImage(sofa4Image1)
     sofa4label1=Label(new, image=sofa4Image1,width=202,height=200)
-    sofa4label1.grid(row=2,column=6,columnspan=2,sticky=W, padx=5)
+    sofa4label1.grid(row=4,column=6,columnspan=2,sticky=W, padx=5)
 
     productname11=Label(new, text='超廉價chromebook', font=('Inter',11))
     productname21=Label(new, text='Acer 平價swift5 i5/8G/512G/wi11', font=('Inter',11))
     productname31=Label(new, text='Asus 中高階zenbook S 13 OLED AMD 7/16G/1TB\n/win11', font=('Inter',11))
     productname41=Label(new, text='Apple 16吋高階MacBook Pro M1 Pro/16G/512G', font=('Inter',11))
     productname11.grid(row=3,column=0,columnspan=2,sticky=W, padx=5)
-    productname21.grid(row=3,column=2,columnspan=2,sticky=W, padx=5)
+    productname21.grid(row=5,column=2,columnspan=2,sticky=W, padx=5)
     productname31.grid(row=3,column=4,columnspan=2,sticky=W, padx=5)
-    productname41.grid(row=3,column=6,columnspan=2,sticky=W, padx=5)
+    productname41.grid(row=5,column=6,columnspan=2,sticky=W, padx=5)
 
     productprice11=Label(new, text='NT.4,287', font=('Inter',11))
     productprice21=Label(new, text='NT.24,900', font=('Inter',11))
     productprice31=Label(new, text='NT.39,999', font=('Inter',11))
     productprice41=Label(new, text='NT.74,900', font=('Inter',11))
     productprice11.grid(row=4,column=0,sticky=W)
-    productprice21.grid(row=4,column=2,sticky=W)
+    productprice21.grid(row=6,column=2,sticky=W)
     productprice31.grid(row=4,column=4,sticky=W)
-    productprice41.grid(row=4,column=6,sticky=W)
+    productprice41.grid(row=6,column=6,sticky=W)
 
 
     minusbutton11=Button(new,text='-',font=('Inter',10),command=lambda: minus(number11,productprice11))
@@ -144,31 +176,31 @@ def createNewWindow():
     number11.grid(row=4,column=1)
     addbutton11.grid(row=4,column=1,sticky=E)
 
-    minusbutton21.grid(row=4,column=3,sticky=W)
-    number21.grid(row=4,column=3)
-    addbutton21.grid(row=4,column=3,sticky=E)
+    minusbutton21.grid(row=6,column=3,sticky=W)
+    number21.grid(row=6,column=3)
+    addbutton21.grid(row=6,column=3,sticky=E)
 
     minusbutton31.grid(row=4,column=5,sticky=W)
     number31.grid(row=4,column=5,)
     addbutton31.grid(row=4,column=5,sticky=E)
 
-    minusbutton41.grid(row=4,column=7,sticky=W)
-    number41.grid(row=4,column=7)
-    addbutton41.grid(row=4,column=7,sticky=E)
+    minusbutton41.grid(row=6,column=7,sticky=W)
+    number41.grid(row=6,column=7)
+    addbutton41.grid(row=6,column=7,sticky=E)
     new.rowconfigure(5,weight=2)
     detailbtn2=Button(new,text='詳細清單',font=('Inter',18))
-    detailbtn2.grid(row=5,column=0,sticky=W+S,padx=5,pady=1)
+    detailbtn2.grid(row=7,column=0,sticky=W+S,padx=5,pady=1)
     chartImage2=Image.open('/Users/scofield/Documents/Python_2022Autumn/Python_2022Autumn/class10.py/image/Shopping Cart.png')
     chartimage2=chartImage2.resize((32,32))
     chartImage2=ImageTk.PhotoImage(chartimage2)
     chartlabel2=Label(new, image=chartImage2,width=32,height=32)
-    chartlabel2.grid(row=5,column=5,sticky=W)
+    chartlabel2.grid(row=7,column=5,sticky=W)
     # totalval2=StringVar()
     # totalval2.set('共消費：0元')
     totallabel2=Label(new, textvariable=totalval,font=('Inter',18),fg='#000000')
-    totallabel2.grid(row=5,column=6,columnspan=2,sticky=W+S)
+    totallabel2.grid(row=7,column=6,columnspan=2,sticky=W+S)
     checkout2=Button(new,text='結帳',font=('Inter',18))
-    checkout2.grid(row=5,column=7,columnspan=2,sticky=E+S)
+    checkout2.grid(row=7,column=7,columnspan=2,sticky=E+S)
     new.mainloop()
 
 def thenew():
@@ -276,19 +308,23 @@ def thenew():
     checkout1=Button(new1,text='結帳',font=('Inter',18))
     checkout1.grid(row=5,column=7,columnspan=2,sticky=E+S)
     new1.mainloop()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # row=0版面配置
 bed=Button(root, text='筆電',width=5,pady=2,font=('Inter',18),command=createNewWindow)
-
-
-
-
-
-
-
-
-
-
-
 sofa=Button(root, text='主機',width=5,pady=2, font=('Inter',18))
 kit=Button(root, text='顯卡',width=5,pady=2,font=('Inter',18),command=thenew)
 member=Button(root,text='會員登入',width=12,pady=2,font=('Inter',18))
@@ -356,10 +392,9 @@ minusbutton4.grid(row=4,column=7,sticky=W)
 number4.grid(row=4,column=7)
 addbutton4.grid(row=4,column=7,sticky=E)
 
-#row=5 
 
 root.rowconfigure(5,weight=2)
-detailbtn=Button(root,text='詳細清單',font=('Inter',18))
+detailbtn=Button(root,text='詳細清單',font=('Inter',18), command=newwindow2)
 detailbtn.grid(row=5,column=0,sticky=W+S,padx=5,pady=1)
 chartImage=Image.open('/Users/scofield/Documents/Python_2022Autumn/Python_2022Autumn/class10.py/image/Shopping Cart.png')
 chartimage=chartImage.resize((32,32))

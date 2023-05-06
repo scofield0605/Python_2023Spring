@@ -277,6 +277,25 @@ def thenew():
     checkout1.grid(row=5,column=7,columnspan=2,sticky=E+S)
     new1.mainloop()
 
+def pay():
+    def linepaypage():
+        line=Toplevel(paypage)
+        line.geometry('200x200')
+        lineimage=Image.open('project/img/line.png')
+        resized_image1=lineimage.resize((200,200))
+        lineimage=ImageTk.PhotoImage(resized_image1)
+        linelabel=Label(line, image=lineimage,width=200,height=200)
+        linelabel.grid(row=0,column=0)
+        line.mainloop()
+    paypage=Toplevel(root)
+    paypage.geometry('200x300')
+    card=Button(paypage, text='刷卡',width=5,pady=2,font=('Inter',18))
+    card.grid(row=5,column=4)
+    linePay=Button(paypage, text='line pay',width=5,pady=2,font=('Inter',18), command=linepaypage)
+    linePay.grid(row=4,column=4)
+
+    paypage.mainloop()
+
 
 titleImage=Image.open('./project/img/logo_tree.png')
 resized_image=titleImage.resize((32,32))
@@ -386,8 +405,12 @@ totalval=StringVar()
 totalval.set('共消費：0元')
 totallabel=Label(root, textvariable=totalval,font=('Inter',18),fg='#000000')
 totallabel.grid(row=5,column=6,columnspan=2,sticky=W+S)
-checkout=Button(root,text='結帳',font=('Inter',18))
+checkout=Button(root,text='結帳',font=('Inter',18),command=pay)
 checkout.grid(row=5,column=7,columnspan=2,sticky=E+S) 
+
+
+
+
 
 
 

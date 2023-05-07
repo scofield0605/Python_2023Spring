@@ -2,9 +2,10 @@ from tkinter import *
 import tkinter.ttk as ttk
 from tkinter import messagebox
 from PIL import Image, ImageTk
+import qrcode
 root= Tk()
 root.title('KubeTech Shop')
-root.geometry('880x650')
+root.geometry('890x650')
 pdinfo=[["超廉價chromebook","NT.4,287","0"],["Acer 平價swift5 i5/8G/512G/wi11","NT.24,900","0"],["Asus 中高階zenbook S 13 OLED AMD 7/16G/1TB\n/win11",'NT.39,999',"0"],["'Apple 16吋高階MacBook Pro M1 Pro/16G/512G'","'NT.74,900'","0"]]
 def addLimit(numlabel,pricelabel):
     if int(numlabel['text'])<=0:
@@ -277,19 +278,50 @@ def thenew():
     checkout1.grid(row=5,column=7,columnspan=2,sticky=E+S)
     new1.mainloop()
 
+#結帳
 def pay():
+    def cardpaypage():
+        cardpay=Toplevel(paypage)
+        cardpay.geometry('300x400')
+        cardEntry=Entry(cardpay,text='輸入卡號',font=('Inter',18))
+        cardEntry.grid(row=0,column=0)
+        cardEnter=Button(cardpay,text='確認付款',font=('Inter',18))
+        cardEnter.grid(row=1,column=0)
+        cardpay.mainloop()
     def linepaypage():
+        global pdinfo
         line=Toplevel(paypage)
         line.geometry('200x200')
-        lineimage=Image.open('project/img/line.png')
+        # 製作qrcode 
+        qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=2
+        )
+        content = "----------------------------\n"
+        for i in pdinfo:
+            for j in i:
+                content = content+ str(j) + "\n"
+            content = content
+            content = content + "----------------------------\n"
+        content = content + "============================"
+        print(content)
+
+        qr.add_data(content)
+        qr.make(fit=True) # 將參數塞進物件中，根據參數製作為 QRCode 物件
+        img = qr.make_image(fill_color="red", back_color="black") # 產生 QRCode 圖片
+        img.save('project/img/qrcode.png')
+        lineimage=Image.open('project/img/qrcode.png')
         resized_image1=lineimage.resize((200,200))
         lineimage=ImageTk.PhotoImage(resized_image1)
         linelabel=Label(line, image=lineimage,width=200,height=200)
         linelabel.grid(row=0,column=0)
         line.mainloop()
+
     paypage=Toplevel(root)
     paypage.geometry('200x300')
-    card=Button(paypage, text='刷卡',width=5,pady=2,font=('Inter',18))
+    card=Button(paypage, text='刷卡',width=5,pady=2,font=('Inter',18),command=cardpaypage)
     card.grid(row=5,column=4)
     linePay=Button(paypage, text='line pay',width=5,pady=2,font=('Inter',18), command=linepaypage)
     linePay.grid(row=4,column=4)
@@ -415,5 +447,8 @@ checkout.grid(row=5,column=7,columnspan=2,sticky=E+S)
 
 
 root.mainloop()
+
+
+
 
 

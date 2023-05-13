@@ -6,7 +6,7 @@ import qrcode
 root= Tk()
 root.title('KubeTech Shop')
 root.geometry('890x650')
-pdinfo=[["超廉價chromebook","NT.4,287","0"],["Acer 平價swift5 i5/8G/512G/wi11","NT.24,900","0"],["Asus 中高階zenbook S 13 OLED AMD 7/16G/1TB\n/win11",'NT.39,999',"0"],["'Apple 16吋高階MacBook Pro M1 Pro/16G/512G'","'NT.74,900'","0"]]
+pdinfo=[["超廉價chromebook","NT.4,287","0"],["Acer 平價swift5 i5/8G/512G/wi11","NT.24,900","0"],["Asus 中高階zenbook S 13 OLED AMD 7/16G/1TB\n/win11",'NT.39,999',"0"],["'Apple 16吋高階MacBook Pro M1 Pro/16G/512G'","'NT.74,900'","0"],]
 def addLimit(numlabel,pricelabel):
     if int(numlabel['text'])<=0:
         numlabel['text']=int(numlabel['text'])+1
@@ -32,8 +32,18 @@ def minus(numlabel,pricelabel,infonum1,infonum2):
         total=int(totalval.get().split('：')[1].replace('元','').strip())
         totalval.set('共消費：'+str(total-price)+' 元')
     else:
-        messagebox.showwarning('show warn', "The number of product can't below zero")
+        messagebox.showwarning('show warn', "The number of product can't below zero") 
 
+def login():
+    loginwindow= Toplevel(root)
+    loginwindow.geometry('200x250')
+    email=Entry(loginwindow, text='enter email', font='18' )
+    email.grid(row=0, column=0)
+    password=Entry(loginwindow, text='enter password')
+    password.grid(row=1,column=0)
+    confirm=Button(loginwindow, text="CONFIRM",command='')
+    confirm.grid(row=2,column=0) 
+    loginwindow.mainloop()
 
 
 
@@ -368,7 +378,7 @@ sofa4label.grid(row=2,column=6,columnspan=2,sticky=W, padx=5)
 bed=Button(root, text='筆電',width=5,pady=2,font=('Inter',18),command=createNewWindow)
 sofa=Button(root, text='主機',width=5,pady=2, font=('Inter',18))
 kit=Button(root, text='顯卡',width=5,pady=2,font=('Inter',18),command=thenew)
-member=Button(root,text='會員登入',width=12,pady=2,font=('Inter',18))
+member=Button(root,text='會員登入',width=12,pady=2,font=('Inter',18),command=login)
 
 productname1=Label(root, text='超老iMac', font=('Inter',11))
 productname2=Label(root, text='Acer 廉價桌機 Intel i3/8G/256G/win11', font=('Inter',11))

@@ -3,14 +3,26 @@ import tkinter.ttk as ttk
 from tkinter import messagebox
 from PIL import Image, ImageTk
 import qrcode
+from email.mime.image import MIMEImage
+#引入MUltipart
+from email.mime.multipart import MIMEMultipart
+from pathlib import Path
+from email.mime.text import MIMEText
+#Python專案中的電子郵件內容完成後，接下來就要設定Gmail的SMTP伺服器來寄送
+import smtplib
+#如果想要在電子郵件中加人圖片，則需在Python專案中引用MIMEImage類別，並且引用pathlib函式庫來讀取圖片
 root= Tk()
 root.title('KubeTech Shop')
 root.geometry('890x650')
-pdinfo=[["超廉價chromebook","NT.4,287","0"],["Acer 平價swift5 i5/8G/512G/wi11","NT.24,900","0"],["Asus 中高階zenbook S 13 OLED AMD 7/16G/1TB\n/win11",'NT.39,999',"0"],["'Apple 16吋高階MacBook Pro M1 Pro/16G/512G'","'NT.74,900'","0"],]
-def addLimit(numlabel,pricelabel):
+userinfo2=["",""]
+pdinfo=[['超老iMac',"NT.4000","0"],["Acer 廉價桌機 Intel i3/8G/256G/win11","NT.14,900","0"],["MSI 中階電競桌機 Intel i5/8G/512G/win11\n RTX2060-6G",'NT.28,900',"0"],["ROG 高階電競桌機 Intel i9/16G/1TBwin11\n RTX3090-24G","NT.69,900","0"],['chromebook',"NT.1000",'0'],['acer',"NT.30,000",'0'],['asus高階',"NT.54,000",'0'],['apple MacBook Pro 16',"NT.72,000",'0'],[' Intel 初階內顯 i5/6CPU',"NT.5,880",'0'],['AMD 中階Ryzen 5 3400G/4CPU8Threads',"NT.5,890",'0'],['NVIDIA 中高階GTX1660s','NT.6,999','0'],['NVIDIA 高階RTX3090 SUPRIM X 24G','NT.36,990','0']]
+def addLimit(numlabel,pricelabel,infonum1,infonum2):
     if int(numlabel['text'])<=0:
+        global pdinfo
         numlabel['text']=int(numlabel['text'])+1
         price=int(pricelabel['text'].split('.')[1].replace(',','').strip())
+        pdinfo[infonum1][infonum2]=str(int(pdinfo[infonum1][infonum2])+1)
+        print(pdinfo)
         total=int(totalval.get().split('：')[1].replace('元','').strip())
         totalval.set('共消費：'+str(total+price)+' 元')
     else:
@@ -35,14 +47,22 @@ def minus(numlabel,pricelabel,infonum1,infonum2):
         messagebox.showwarning('show warn', "The number of product can't below zero") 
 
 def login():
+    def check(passEmail,passPassword):
+        userinfo2[0] = passEmail
+        userinfo2[1] = passPassword
+        print(userinfo2)
     loginwindow= Toplevel(root)
     loginwindow.geometry('200x250')
-    email=Entry(loginwindow, text='enter email', font='18' )
-    email.grid(row=0, column=0)
-    password=Entry(loginwindow, text='enter password')
-    password.grid(row=1,column=0)
-    confirm=Button(loginwindow, text="CONFIRM",command='')
-    confirm.grid(row=2,column=0) 
+    emailname=Label(loginwindow, text='enter email')
+    emailname.grid(row=0, column=0)
+    email=Entry(loginwindow)
+    email.grid(row=1, column=0)
+    passwordname=Label(loginwindow, text='enter password')
+    passwordname.grid(row=2,column=0)
+    password=Entry(loginwindow,)
+    password.grid(row=3,column=0)
+    confirm=Button(loginwindow, text="CONFIRM",command=lambda:check(passEmail=email.get(),passPassword=password.get()))
+    confirm.grid(row=4,column=0) 
     loginwindow.mainloop()
 
 
@@ -63,15 +83,32 @@ def newwindow2():
     table.column('#3', anchor=CENTER)
     # 建立内容,從total行是用淺藍色底
     table.tag_configure('totalcolor', background='#E7E2E2')
-    subtotal1 = int(number1['text']) * int(productprice1['text'].split('.')[1].replace(',',''))
-    table.insert('',index='end',text=productname1['text'],values=[productprice1['text'],number1['text'], subtotal1])
-    subtotal2 = int(number2['text']) * int(productprice2['text'].split('.')[1].replace(',',''))
-    table.insert('',index='end',text=productname2['text'],values=[productprice2['text'],number2['text'], subtotal2])
-    subtotal3 = int(number3['text']) * int(productprice3['text'].split('.')[1].replace(',',''))
-    table.insert('',index='end',text=productname3['text'],values=[productprice3['text'],number3['text'], subtotal3])
-    subtotal4 = int(number4['text']) * int(productprice4['text'].split('.')[1].replace(',',''))
-    table.insert('',index='end',text=productname4['text'],values=[productprice4['text'],number4['text'], subtotal4])
-    total = subtotal1+subtotal2+subtotal3+subtotal4
+    subtotal0 = int(pdinfo[0][2]) * int(pdinfo[0][1].split('.')[1].replace(',',''))
+    table.insert('',index='end',text=pdinfo[0][0],values=[pdinfo[0][1],pdinfo[0][2], subtotal0])
+    subtotal1 = int(pdinfo[1][2]) * int(pdinfo[1][1].split('.')[1].replace(',',''))
+    table.insert('',index='end',text=pdinfo[1][0],values=[pdinfo[1][1],pdinfo[1][2], subtotal1])
+    subtotal2 = int(pdinfo[2][2]) * int(pdinfo[2][1].split('.')[1].replace(',',''))
+    table.insert('',index='end',text=pdinfo[2][0],values=[pdinfo[2][1],pdinfo[2][2], subtotal2])
+    subtotal3 = int(pdinfo[3][2]) * int(pdinfo[3][1].split('.')[1].replace(',',''))
+    table.insert('',index='end',text=pdinfo[3][0],values=[pdinfo[3][1],pdinfo[3][2], subtotal3])
+    subtotal4 = int(pdinfo[4][2]) * int(pdinfo[4][1].split('.')[1].replace(',',''))
+    table.insert('',index='end',text=pdinfo[4][0],values=[pdinfo[4][1],pdinfo[4][2], subtotal4])
+    subtotal5 = int(pdinfo[5][2]) * int(pdinfo[5][1].split('.')[1].replace(',',''))
+    table.insert('',index='end',text=pdinfo[5][0],values=[pdinfo[5][1],pdinfo[5][2], subtotal5])
+    subtotal6 = int(pdinfo[6][2]) * int(pdinfo[6][1].split('.')[1].replace(',',''))
+    table.insert('',index='end',text=pdinfo[6][0],values=[pdinfo[6][1],pdinfo[6][2], subtotal6])
+    subtotal7 = int(pdinfo[7][2]) * int(pdinfo[7][1].split('.')[1].replace(',',''))
+    table.insert('',index='end',text=pdinfo[7][0],values=[pdinfo[7][1],pdinfo[7][2], subtotal7])
+    subtotal8 = int(pdinfo[8][2]) * int(pdinfo[8][1].split('.')[1].replace(',',''))
+    table.insert('',index='end',text=pdinfo[8][0],values=[pdinfo[8][1],pdinfo[8][2], subtotal8])
+    subtotal9 = int(pdinfo[9][2]) * int(pdinfo[9][1].split('.')[1].replace(',',''))
+    table.insert('',index='end',text=pdinfo[9][0],values=[pdinfo[9][1],pdinfo[9][2], subtotal9])
+    subtotal10 = int(pdinfo[10][2]) * int(pdinfo[10][1].split('.')[1].replace(',',''))
+    table.insert('',index='end',text=pdinfo[10][0],values=[pdinfo[10][1],pdinfo[10][2], subtotal10])
+    subtotal11 = int(pdinfo[11][2]) * int(pdinfo[11][1].split('.')[1].replace(',',''))
+    table.insert('',index='end',text=pdinfo[11][0],values=[pdinfo[11][1],pdinfo[11][2], subtotal11])
+
+    total = subtotal0+subtotal1+subtotal2+subtotal3+subtotal4+subtotal5+subtotal6+subtotal7+subtotal8+subtotal9+subtotal10+subtotal11
     table.insert('',index='end',text='Total',values=['','', total], tags=('totalcolor'))
     table.pack()
     
@@ -84,6 +121,12 @@ def createNewWindow():
     global pdinfo
     new=Toplevel(root)
     new.geometry('880x650')
+
+    adviertise2=Image.open('project/img/截圖 2023-05-14 10.18.03.png')
+    adviertise2=adviertise2.resize((202,500))
+    adviertise2=ImageTk.PhotoImage(adviertise2)
+    adviertiselabel2=Label(new, image=adviertise2,width=202,height=500)
+    adviertiselabel2.grid(row=0,column=7,rowspan=6,sticky=W, padx=5)
 
     adviertise=Image.open('./project/img/339ed0a22bcb95e84a3f390a039e837b.jpg')
     adviertise=ImageTk.PhotoImage(adviertise)
@@ -105,48 +148,48 @@ def createNewWindow():
     sofa3Image1=sofa3Image1.resize((202,200))
     sofa3Image1=ImageTk.PhotoImage(sofa3Image1)
     sofa3label1=Label(new, image=sofa3Image1,width=202,height=200)
-    sofa3label1.grid(row=2,column=6,columnspan=2,sticky=W, padx=5)
+    sofa3label1.grid(row=4,column=2,columnspan=2,sticky=W, padx=5)
 
     sofa4Image1=Image.open('./project/img/mbp16-spacegray-select-202110_GEO_TW.jpeg')
     sofa4Image1=sofa4Image1.resize((202,200))
     sofa4Image1=ImageTk.PhotoImage(sofa4Image1)
     sofa4label1=Label(new, image=sofa4Image1,width=202,height=200)
-    sofa4label1.grid(row=4,column=7,columnspan=2,sticky=W, padx=5)
+    sofa4label1.grid(row=4,column=4,columnspan=2,sticky=W, padx=5)
 
-    productname11=Label(new, text=(pdinfo[0][0]), font=('Inter',11))
-    productname21=Label(new, text=(pdinfo[1][0]), font=('Inter',11))
-    productname31=Label(new, text=(pdinfo[2][0]), font=('Inter',11))
-    productname41=Label(new, text=(pdinfo[3][0]), font=('Inter',11))
+    productname11=Label(new, text=(pdinfo[4][0]), font=('Inter',11))
+    productname21=Label(new, text=(pdinfo[5][0]), font=('Inter',11))
+    productname31=Label(new, text=(pdinfo[6][0]), font=('Inter',11))
+    productname41=Label(new, text=(pdinfo[7][0]), font=('Inter',11))
     productname11.grid(row=1,column=2,columnspan=2,sticky=W, padx=5)
     productname21.grid(row=1,column=4,columnspan=2,sticky=W, padx=5)
-    productname31.grid(row=3,column=4,columnspan=2,sticky=W, padx=5)
-    productname41.grid(row=5,column=6,columnspan=2,sticky=W, padx=5)
+    productname31.grid(row=5,column=2,columnspan=2,sticky=W, padx=5)
+    productname41.grid(row=5,column=4,columnspan=2,sticky=W, padx=5)
 
-    productprice11=Label(new, text=(pdinfo[0][1]), font=('Inter',11))
-    productprice21=Label(new, text=(pdinfo[1][1]), font=('Inter',11))
-    productprice31=Label(new, text=(pdinfo[2][1]), font=('Inter',11))
-    productprice41=Label(new, text=(pdinfo[3][1]), font=('Inter',11))
+    productprice11=Label(new, text=(pdinfo[4][1]), font=('Inter',11))
+    productprice21=Label(new, text=(pdinfo[5][1]), font=('Inter',11))
+    productprice31=Label(new, text=(pdinfo[6][1]), font=('Inter',11))
+    productprice41=Label(new, text=(pdinfo[7][1]), font=('Inter',11))
     productprice11.grid(row=2,column=2,sticky=W)
     productprice21.grid(row=2,column=4,sticky=W)
-    productprice31.grid(row=4,column=4,sticky=W)
-    productprice41.grid(row=6,column=6,sticky=W)
+    productprice31.grid(row=6,column=2,sticky=W)
+    productprice41.grid(row=6,column=4,sticky=W)
 
 
-    minusbutton11=Button(new,text='-',font=('Inter',10),command=lambda: minus(number11,productprice11),)
+    minusbutton11=Button(new,text='-',font=('Inter',10),command=lambda: minus(number11,productprice11,4,2))
     number11=Label(new,text='0',font=('Inter',12))
-    addbutton11=Button(new,text='+',font=('Inter',10),command=lambda: add(number11,productprice11))
+    addbutton11=Button(new,text='+',font=('Inter',10),command=lambda: add(number11,productprice11,4,2))
 
-    minusbutton21=Button(new,text='-',font=('Inter',10),command=lambda: minus(number21,productprice21))
+    minusbutton21=Button(new,text='-',font=('Inter',10),command=lambda: minus(number21,productprice21,5,2))
     number21=Label(new,text='0',font=('Inter',12))
-    addbutton21=Button(new,text='+',font=('Inter',10),command=lambda: add(number21,productprice21))
+    addbutton21=Button(new,text='+',font=('Inter',10),command=lambda: add(number21,productprice21,5,2))
 
-    minusbutton31=Button(new,text='-',font=('Inter',10),command=lambda: minus(number31,productprice31))
+    minusbutton31=Button(new,text='-',font=('Inter',10),command=lambda: minus(number31,productprice31,6,2))
     number31=Label(new,text='0',font=('Inter',12))
-    addbutton31=Button(new,text='+',font=('Inter',10),command=lambda: add(number31,productprice31))
+    addbutton31=Button(new,text='+',font=('Inter',10),command=lambda: add(number31,productprice31,6,2))
 
-    minusbutton41=Button(new,text='-',font=('Inter',10),command=lambda: minus(number41,productprice41))
+    minusbutton41=Button(new,text='-',font=('Inter',10),command=lambda: minus(number41,productprice41,7,2))
     number41=Label(new,text='0',font=('Inter',12))
-    addbutton41=Button(new,text='+',font=('Inter',10),command=lambda: add(number41,productprice41))
+    addbutton41=Button(new,text='+',font=('Inter',10),command=lambda: add(number41,productprice41,7,2))
 
     minusbutton11.grid(row=2,column=3,sticky=W)
     number11.grid(row=2,column=3)
@@ -156,27 +199,21 @@ def createNewWindow():
     number21.grid(row=2,column=5)
     addbutton21.grid(row=2,column=5,sticky=E)
 
-    minusbutton31.grid(row=4,column=5,sticky=W)
-    number31.grid(row=4,column=5,)
-    addbutton31.grid(row=4,column=5,sticky=E)
+    minusbutton31.grid(row=6,column=3,sticky=W)
+    number31.grid(row=6,column=3)
+    addbutton31.grid(row=6,column=3,sticky=E)
 
-    minusbutton41.grid(row=6,column=7,sticky=W)
-    number41.grid(row=6,column=7)
-    addbutton41.grid(row=6,column=7,sticky=E)
+    minusbutton41.grid(row=6,column=5,sticky=W)
+    number41.grid(row=6,column=5)
+    addbutton41.grid(row=6,column=5,sticky=E)
     new.rowconfigure(5,weight=2)
+
     detailbtn2=Button(new,text='詳細清單',font=('Inter',18))
     detailbtn2.grid(row=7,column=0,sticky=W+S,padx=5,pady=1)
-    chartImage2=Image.open('./project/img/Shopping Cart.png')
-    chartimage2=chartImage2.resize((32,32))
-    chartImage2=ImageTk.PhotoImage(chartimage2)
-    chartlabel2=Label(new, image=chartImage2,width=32,height=32)
-    chartlabel2.grid(row=7,column=5,sticky=W)
     # totalval2=StringVar()
     # totalval2.set('共消費：0元')
     totallabel2=Label(new, textvariable=totalval,font=('Inter',18),fg='#000000')
     totallabel2.grid(row=7,column=6,columnspan=2,sticky=W+S)
-    checkout2=Button(new,text='結帳',font=('Inter',18))
-    checkout2.grid(row=7,column=7,columnspan=2,sticky=E+S)
     new.mainloop()
 
 
@@ -223,39 +260,39 @@ def thenew():
     sofa4label2=Label(new1, image=sofa4Image2,width=202,height=200)
     sofa4label2.grid(row=2,column=6,columnspan=2,sticky=W, padx=5)
 
-    productname22=Label(new1, text='Intel 初階內顯 i5/6CPU', font=('Inter',11))
-    productname32=Label(new1, text='AMD 中階Ryzen 5 3400G/4CPU8Threads', font=('Inter',11))
-    productname12=Label(new1, text='NVIDIA 中高階GTX1660s', font=('Inter',11))
-    productname42=Label(new1, text='NVIDIA 高階RTX3090 SUPRIM X 24G', font=('Inter',11))
+    productname22=Label(new1, text=(pdinfo[8][0]), font=('Inter',11))
+    productname32=Label(new1, text=(pdinfo[9][0]), font=('Inter',11))
+    productname12=Label(new1, text=(pdinfo[10][0]), font=('Inter',11))
+    productname42=Label(new1, text=(pdinfo[11][0]), font=('Inter',11))
     productname12.grid(row=3,column=0,columnspan=2,sticky=W, padx=5)
     productname22.grid(row=3,column=2,columnspan=2,sticky=W, padx=5)
     productname32.grid(row=3,column=4,columnspan=2,sticky=W, padx=5)
     productname42.grid(row=3,column=6,columnspan=2,sticky=W, padx=5)
 
-    productprice12=Label(new1, text='NT.5,880', font=('Inter',11))
-    productprice22=Label(new1, text='NT.5,890', font=('Inter',11))
-    productprice32=Label(new1, text='NT.6,999', font=('Inter',11))
-    productprice42=Label(new1, text='NT.36,990', font=('Inter',11))
+    productprice12=Label(new1, text=(pdinfo[8][1]), font=('Inter',11))
+    productprice22=Label(new1, text=(pdinfo[9][1]), font=('Inter',11))
+    productprice32=Label(new1, text=(pdinfo[10][1]), font=('Inter',11))
+    productprice42=Label(new1, text=(pdinfo[11][1]), font=('Inter',11))
     productprice12.grid(row=4,column=0,sticky=W)
     productprice22.grid(row=4,column=2,sticky=W)
     productprice32.grid(row=4,column=4,sticky=W)
     productprice42.grid(row=4,column=6,sticky=W)
 
-    minusbutton12=Button(new1,text='-',font=('Inter',10),command=lambda: minus(number12,productprice12))
+    minusbutton12=Button(new1,text='-',font=('Inter',10),command=lambda: minus(number12,productprice12,8,2))
     number12=Label(new1,text='0',font=('Inter',12))
-    addbutton12=Button(new1,text='+',font=('Inter',10),command=lambda: add(number12,productprice12))
+    addbutton12=Button(new1,text='+',font=('Inter',10),command=lambda: add(number12,productprice12,8,2))
 
-    minusbutton22=Button(new1,text='-',font=('Inter',10),command=lambda: minus(number22,productprice22))
+    minusbutton22=Button(new1,text='-',font=('Inter',10),command=lambda: minus(number22,productprice22,9,2))
     number22=Label(new1,text='0',font=('Inter',12))
-    addbutton22=Button(new1,text='+',font=('Inter',10),command=lambda: add(number22,productprice22))
+    addbutton22=Button(new1,text='+',font=('Inter',10),command=lambda: add(number22,productprice22,9,2))
 
-    minusbutton32=Button(new1,text='-',font=('Inter',10),command=lambda: minus(number32,productprice32))
+    minusbutton32=Button(new1,text='-',font=('Inter',10),command=lambda: minus(number32,productprice32,10,2))
     number32=Label(new1,text='0',font=('Inter',12))
-    addbutton32=Button(new1,text='+',font=('Inter',10),command=lambda: add(number32,productprice32))
+    addbutton32=Button(new1,text='+',font=('Inter',10),command=lambda: add(number32,productprice32,10,2))
 
-    minusbutton42=Button(new1,text='-',font=('Inter',10),command=lambda: minus(number42,productprice42))
+    minusbutton42=Button(new1,text='-',font=('Inter',10),command=lambda: minus(number42,productprice42,11,2))
     number42=Label(new1,text='0',font=('Inter',12))
-    addbutton42=Button(new1,text='+',font=('Inter',10),command=lambda: add(number42,productprice42))
+    addbutton42=Button(new1,text='+',font=('Inter',10),command=lambda: add(number42,productprice42,11,2))
 
     minusbutton12.grid(row=4,column=1,sticky=W)
     number12.grid(row=4,column=1)
@@ -290,18 +327,68 @@ def thenew():
 
 #結帳
 def pay():
+    def emailcode():
+        sum = 0
+        content = "----------------------------\n"
+        for i in pdinfo:
+            sum = sum+int(i[2]) * int(i[1].split('.')[1].replace(',',''))
+            if i[2] == '0':
+                continue
+            else:
+                for j in i:
+                    content = content+ str(j) + "\n"
+                content = content
+                content = content + "----------------------------\n"
+        content = content + "============================\n總金額:"+str(sum)
+
+        print(content)
+        temp = '您已完成付款\n'+content
+        text=MIMEText(temp)
+
+        image=MIMEImage(Path('/Users/scofield/Documents/Python_2023Spring/giganigga.jpg').read_bytes())
+        content=MIMEMultipart()
+        content['subject']='2023 Pthon App 春季班DEmo'
+        content['from']='scofieldtsai@gmail.com'
+        content['to']=userinfo2[0]
+
+        content.attach(text)
+        content.attach(image)
+
+        smtp=smtplib.SMTP(host='smtp.gmail.com', port='587')
+
+        f=open('class5/password.txt','r')
+        mailToken=f.read()
+        f.close()
+
+        #利用 with 來自動釋放資源
+        with open('class5/password.txt','r')  as f:
+            mailToken=f.read()
+
+
+        with smtp:#利用 with 來白動釋放資源
+            try:
+                smtp.ehlo() #驗證SMTP伺服器
+                smtp.starttls() #建立加密傳輸
+                smtp.login("scofieldtsai@gmail.com", mailToken)
+                smtp.send_message ( content) #寄送郵件
+                print ("Email is Sended completely!")
+                smtp.quit ()
+            except Exception as e:
+                print ("Error message: ", e)
+
     def cardpaypage():
         cardpay=Toplevel(paypage)
         cardpay.geometry('300x400')
         cardEntry=Entry(cardpay,text='輸入卡號',font=('Inter',18))
         cardEntry.grid(row=0,column=0)
-        cardEnter=Button(cardpay,text='確認付款',font=('Inter',18))
+        cardEnter=Button(cardpay,text='確認付款',font=('Inter',18),command=emailcode)
         cardEnter.grid(row=1,column=0)
         cardpay.mainloop()
     def linepaypage():
+        sum = 0
         global pdinfo
         line=Toplevel(paypage)
-        line.geometry('200x200')
+        line.geometry('500x500')
         # 製作qrcode 
         qr = qrcode.QRCode(
         version=1,
@@ -311,21 +398,25 @@ def pay():
         )
         content = "----------------------------\n"
         for i in pdinfo:
-            for j in i:
-                content = content+ str(j) + "\n"
-            content = content
-            content = content + "----------------------------\n"
-        content = content + "============================"
+            sum = sum+int(i[2]) * int(i[1].split('.')[1].replace(',',''))
+            if i[2] == '0':
+                continue
+            else:
+                for j in i:
+                    content = content+ str(j) + "\n"
+                content = content
+                content = content + "----------------------------\n"
+        content = content + "============================\n總金額:"+str(sum)
         print(content)
 
         qr.add_data(content)
         qr.make(fit=True) # 將參數塞進物件中，根據參數製作為 QRCode 物件
-        img = qr.make_image(fill_color="red", back_color="black") # 產生 QRCode 圖片
+        img = qr.make_image(fill_color="yellow", back_color="black") # 產生 QRCode 圖片
         img.save('project/img/qrcode.png')
         lineimage=Image.open('project/img/qrcode.png')
-        resized_image1=lineimage.resize((200,200))
+        resized_image1=lineimage.resize((500,500))
         lineimage=ImageTk.PhotoImage(resized_image1)
-        linelabel=Label(line, image=lineimage,width=200,height=200)
+        linelabel=Label(line, image=lineimage,width=500,height=500)
         linelabel.grid(row=0,column=0)
         line.mainloop()
 
@@ -380,10 +471,10 @@ sofa=Button(root, text='主機',width=5,pady=2, font=('Inter',18))
 kit=Button(root, text='顯卡',width=5,pady=2,font=('Inter',18),command=thenew)
 member=Button(root,text='會員登入',width=12,pady=2,font=('Inter',18),command=login)
 
-productname1=Label(root, text='超老iMac', font=('Inter',11))
-productname2=Label(root, text='Acer 廉價桌機 Intel i3/8G/256G/win11', font=('Inter',11))
-productname3=Label(root, text='MSI 中階電競桌機 Intel i5/8G/512G/win11\n RTX2060-6G', font=('Inter',11))
-productname4=Label(root, text='ROG 高階電競桌機 Intel i9/16G/1TBwin11\n RTX3090-24G', font=('Inter',11))
+productname1=Label(root, text=(pdinfo[0][0]), font=('Inter',11))
+productname2=Label(root, text=(pdinfo[1][0]), font=('Inter',11))
+productname3=Label(root, text=(pdinfo[2][0]), font=('Inter',11))
+productname4=Label(root, text=(pdinfo[3][0]), font=('Inter',11))
 productname1.grid(row=3,column=0,columnspan=2,sticky=W, padx=5)
 productname2.grid(row=3,column=2,columnspan=2,sticky=W, padx=5)
 productname3.grid(row=3,column=4,columnspan=2,sticky=W, padx=5)
@@ -392,31 +483,31 @@ sofa.grid(row=0,column=1,sticky=W)
 bed.grid(row=0,column=2,sticky=W)
 kit.grid(row=0,column=3,sticky=E+W)
 member.grid(row=0,column=7,sticky=E+W, padx=5)
-productprice1=Label(root, text='NT.4000', font=('Inter',11))
-productprice2=Label(root, text='NT.14,900', font=('Inter',11))
-productprice3=Label(root, text='NT.28,900', font=('Inter',11))
-productprice4=Label(root, text='NT.69,900', font=('Inter',11))
+productprice1=Label(root, text=(pdinfo[0][1]), font=('Inter',11))
+productprice2=Label(root, text=(pdinfo[1][1]), font=('Inter',11))
+productprice3=Label(root, text=(pdinfo[2][1]), font=('Inter',11))
+productprice4=Label(root, text=(pdinfo[3][1]), font=('Inter',11))
 productprice1.grid(row=4,column=0,sticky=W)
 productprice2.grid(row=4,column=2,sticky=W)
 productprice3.grid(row=4,column=4,sticky=W)
 productprice4.grid(row=4,column=6,sticky=W)
 
 
-minusbutton1=Button(root,text='-',font=('Inter',10),command=lambda: minus(number1,productprice1))
+minusbutton1=Button(root,text='-',font=('Inter',10),command=lambda: minus(number1,productprice1,0,2))
 number1=Label(root,text='0',font=('Inter',12))
-addbutton1=Button(root,text='+',font=('Inter',10),command=lambda: add(number1,productprice1))
+addbutton1=Button(root,text='+',font=('Inter',10),command=lambda: add(number1,productprice1,0,2))
 
-minusbutton2=Button(root,text='-',font=('Inter',10),command=lambda: minus(number2,productprice2))
+minusbutton2=Button(root,text='-',font=('Inter',10),command=lambda: minus(number2,productprice2,1,2))
 number2=Label(root,text='0',font=('Inter',12))
-addbutton2=Button(root,text='+',font=('Inter',10),command=lambda: add(number2,productprice2))
+addbutton2=Button(root,text='+',font=('Inter',10),command=lambda: add(number2,productprice2,1,2))
 
-minusbutton3=Button(root,text='-',font=('Inter',10),command=lambda: minus(number3,productprice3))
+minusbutton3=Button(root,text='-',font=('Inter',10),command=lambda: minus(number3,productprice3,2,2))
 number3=Label(root,text='0',font=('Inter',12))
-addbutton3=Button(root,text='+',font=('Inter',10),command=lambda: add(number3,productprice3))
+addbutton3=Button(root,text='+',font=('Inter',10),command=lambda: add(number3,productprice3,2,2))
 
-minusbutton4=Button(root,text='-',font=('Inter',10),command=lambda: minus(number4,productprice4))
+minusbutton4=Button(root,text='-',font=('Inter',10),command=lambda: minus(number4,productprice4,3,2))
 number4=Label(root,text='0',font=('Inter',12))
-addbutton4=Button(root,text='+',font=('Inter',10),command=lambda: addLimit(number4,productprice4))
+addbutton4=Button(root,text='+',font=('Inter',10),command=lambda: addLimit(number4,productprice4,3,2))
 
 minusbutton1.grid(row=4,column=1,sticky=W)
 number1.grid(row=4,column=1)
@@ -449,11 +540,6 @@ totallabel=Label(root, textvariable=totalval,font=('Inter',18),fg='#000000')
 totallabel.grid(row=5,column=6,columnspan=2,sticky=W+S)
 checkout=Button(root,text='結帳',font=('Inter',18),command=pay)
 checkout.grid(row=5,column=7,columnspan=2,sticky=E+S) 
-
-
-
-
-
 
 
 root.mainloop()

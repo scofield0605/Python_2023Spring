@@ -10,10 +10,16 @@ from pathlib import Path
 from email.mime.text import MIMEText
 #Python專案中的電子郵件內容完成後，接下來就要設定Gmail的SMTP伺服器來寄送
 import smtplib
+from PIL import Image, ImageTk
+# 開啟圖片
+
 #如果想要在電子郵件中加人圖片，則需在Python專案中引用MIMEImage類別，並且引用pathlib函式庫來讀取圖片
 root= Tk()
 root.title('KubeTech Shop')
 root.geometry('890x650')
+img = Image.open('project/img/logo_tree.png')
+tk_img = ImageTk.PhotoImage(img)
+root.iconphoto(True,tk_img)
 userinfo2=["",""]
 pdinfo=[['超老iMac',"NT.4000","0"],["Acer 廉價桌機 Intel i3/8G/256G/win11","NT.14,900","0"],["MSI 中階電競桌機 Intel i5/8G/512G/win11\n RTX2060-6G",'NT.28,900',"0"],["ROG 高階電競桌機 Intel i9/16G/1TBwin11\n RTX3090-24G","NT.69,900","0"],['chromebook',"NT.1000",'0'],['acer',"NT.30,000",'0'],['asus高階',"NT.54,000",'0'],['apple MacBook Pro 16',"NT.72,000",'0'],[' Intel 初階內顯 i5/6CPU',"NT.5,880",'0'],['AMD 中階Ryzen 5 3400G/4CPU8Threads',"NT.5,890",'0'],['NVIDIA 中高階GTX1660s','NT.6,999','0'],['NVIDIA 高階RTX3090 SUPRIM X 24G','NT.36,990','0']]
 def addLimit(numlabel,pricelabel,infonum1,infonum2):
@@ -208,9 +214,6 @@ def createNewWindow():
     addbutton41.grid(row=6,column=5,sticky=E)
     new.rowconfigure(5,weight=2)
 
-    detailbtn2=Button(new,text='詳細清單',font=('Inter',18))
-    detailbtn2.grid(row=7,column=0,sticky=W+S,padx=5,pady=1)
-    # totalval2=StringVar()
     # totalval2.set('共消費：0元')
     totallabel2=Label(new, textvariable=totalval,font=('Inter',18),fg='#000000')
     totallabel2.grid(row=7,column=6,columnspan=2,sticky=W+S)
